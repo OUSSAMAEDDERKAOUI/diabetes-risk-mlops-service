@@ -63,4 +63,8 @@ for model_name, model_obj in models.items():
         elif model_name == "XGBoost":
             mlflow.log_param("n_estimators", 200)
             mlflow.log_param("max_depth", 6)
-        
+        # Log metrics
+        mlflow.log_metric("accuracy", acc)
+        mlflow.log_metric("precision", precision)
+        mlflow.log_metric("recall", recall)
+        mlflow.log_metric("f1_score", f1)
