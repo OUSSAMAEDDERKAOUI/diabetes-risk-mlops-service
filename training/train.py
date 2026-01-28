@@ -1,6 +1,7 @@
 import pandas as pd
 import mlflow
 import mlflow.sklearn
+from mlflow.tracking import MlflowClient
 
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
@@ -35,7 +36,9 @@ models = {
 
 
 mlflow.set_experiment("Diabetes-Risk-Prediction-MLflow")
-
+client=MlflowClient()
+best_acc=0
+best_run_id = None
 for model_name, model_obj in models.items():
 
     with mlflow.start_run(run_name=model_name):
@@ -71,7 +74,19 @@ for model_name, model_obj in models.items():
         mlflow.sklearn.log_model(
             sk_model=pipeline,
             artifact_path="model",
-            registered_model_name=MODEL_NAME
+            registered_model_name=model_name
         )
 
         print(f" {model_name} trained, logged and registered in MLflow")
+        
+        if acc>best_acc:
+            best_acc=acc
+            best_run_id=mlflow.active_run().info.run_id
+            print(f"{model_name} trained, logged and registered in MLflow")
+
+if best_run_id:
+    versions=client.get_latest_versions(name=model_name)
+    for v in versions:
+        if v.run_id==best_run_id:
+            client.transition_model_version_stage(name=model_name,version=v.version,stage="Production",archive_existing_versions=True)
+        print(f"Model {model_name} version {v.version} promoted to Production")
