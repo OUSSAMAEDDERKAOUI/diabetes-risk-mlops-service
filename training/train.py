@@ -11,14 +11,15 @@ from xgboost import XGBClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
 
-DATA_PATH = "data/diabetes.csv"  
+DATA_PATH = "data/data_cleaned_standardized_clustred_classified.csv"  
 TARGET = "risk_category"
 MODEL_NAME = "diabetes-risk-model"
 
 
 df = pd.read_csv(DATA_PATH)
-X = df.drop(columns=[TARGET])
-y = df[TARGET]
+X = df.drop(columns=["Cluster","risk_category"])
+y = df["Cluster"]
+
 
 
 X_train, X_test, y_train, y_test = train_test_split(
@@ -33,7 +34,7 @@ models = {
 }
 
 
-mlflow.set_experiment("Diabetes-Risk-Prediction")
+mlflow.set_experiment("Diabetes-Risk-Prediction-MLflow")
 
 for model_name, model_obj in models.items():
 

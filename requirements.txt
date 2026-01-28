@@ -5,6 +5,7 @@ numpy
 pandas
 scikit-learn
 joblib
+xgboost 
 
 # =========================
 # MLflow (tracking + registry)
