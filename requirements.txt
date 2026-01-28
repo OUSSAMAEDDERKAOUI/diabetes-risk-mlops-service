@@ -1,0 +1,37 @@
+# =========================
+# Core ML
+# =========================
+numpy
+pandas
+scikit-learn
+joblib
+
+# =========================
+# MLflow (tracking + registry)
+# =========================
+mlflow
+
+# =========================
+# Visualization (notebooks / debug)
+# =========================
+matplotlib
+seaborn
+
+# =========================
+# API
+# =========================
+fastapi
+uvicorn[standard]
+pydantic
+
+# =========================
+# Data & utils
+# =========================
+python-dotenv
+requests
+
+# =========================
+# Notebooks
+# =========================
+jupyter
+ipykernel
