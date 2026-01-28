@@ -53,7 +53,6 @@ for model_name, model_obj in models.items():
         recall = recall_score(y_test, y_pred)
         f1 = f1_score(y_test, y_pred)
 
-       # Log parameters
         mlflow.log_param("model_type", model_name)
         if model_name == "LogisticRegression":
             mlflow.log_param("solver", "liblinear")
@@ -63,8 +62,15 @@ for model_name, model_obj in models.items():
         elif model_name == "XGBoost":
             mlflow.log_param("n_estimators", 200)
             mlflow.log_param("max_depth", 6)
-        # Log metrics
+
         mlflow.log_metric("accuracy", acc)
         mlflow.log_metric("precision", precision)
         mlflow.log_metric("recall", recall)
         mlflow.log_metric("f1_score", f1)
+        mlflow.sklearn.log_model(
+            sk_model=pipeline,
+            artifact_path="model",
+            registered_model_name=MODEL_NAME
+        )
+
+        print(f" {model_name} trained, logged and registered in MLflow")
