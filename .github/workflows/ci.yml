@@ -85,7 +85,7 @@ jobs:
 
       # 🔹 Étape 1 : Entraîner et enregistrer un modèle temporaire
       - name: Train temp model for CI
-        run: python scripts/train_test_model_ci.py
+        run: python scripts/train_test_model.py
 
       # 🔹 Étape 2 : Tester la performance du modèle enregistré
       - name: Validate model quality
