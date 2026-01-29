@@ -35,6 +35,12 @@ jobs:
         run: |
           pip install pytest pandas
           pytest tests/test_data_quality.py --maxfail=1 --disable-warnings
+          
+      - name: Validate model quality
+        run: |
+          pip install pytest pandas
+          pytest tests/test_model_performance.py --maxfail=1 --disable-warnings
+
 
 
 
