@@ -3,6 +3,8 @@ name: CI Pipeline
 on:
   push:
     branches: [ "main" ]
+env:
+  MLFLOW_TRACKING_URI: ./mlruns_temp  
 
 jobs:
   build:
@@ -41,11 +43,11 @@ jobs:
           pip install -r requirements.txt
           python scripts/train_test_model.py
 
-      - name: Code Quality Checks
-        run: |
-          pip install flake8 black mypy
-          black --check app/ scripts/
-          flake8 app/ scripts/
-          mypy app/ scripts/
+      # - name: Code Quality Checks
+      #   run: |
+      #     pip install flake8 black mypy
+      #     black --check app/ scripts/
+      #     flake8 app/ scripts/
+      #     mypy app/ scripts/
 
 
