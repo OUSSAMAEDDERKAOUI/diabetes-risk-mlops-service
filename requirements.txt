@@ -1,38 +1,4 @@
-# =========================
-# Core ML
-# =========================
-numpy
-pandas
-scikit-learn
-joblib
-xgboost 
-
-# =========================
-# MLflow (tracking + registry)
-# =========================
-mlflow
-
-# =========================
-# Visualization (notebooks / debug)
-# =========================
-matplotlib
-seaborn
-
-# =========================
-# API
-# =========================
-fastapi
-uvicorn[standard]
-pydantic
-
-# =========================
-# Data & utils
-# =========================
-python-dotenv
-requests
-
-# =========================
-# Notebooks
-# =========================
-jupyter
-ipykernel
+-r requirements/requirements-base.txt
+-r requirements/requirements-ml.txt
+-r requirements/requirements-api.txt
+-r requirements/requirements-monitoring.txt

@@ -1,7 +1,7 @@
 import mlflow
 import mlflow.sklearn
 
-MODEL_NAME = "diabetes-risk-model"
+MODEL_NAME = "LogisticRegression"
 
 def load_model():
     model_uri = f"models:/{MODEL_NAME}/Production"  

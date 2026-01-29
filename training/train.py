@@ -12,7 +12,7 @@ from xgboost import XGBClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
 
-DATA_PATH = "data/data_cleaned_standardized_clustred_classified.csv"  
+DATA_PATH = "data/diabetes_data_cleaned_classified.csv"  
 TARGET = "risk_category"
 MODEL_NAME = "diabetes-risk-model"
 
@@ -34,9 +34,11 @@ models = {
     "XGBoost": XGBClassifier(n_estimators=200, max_depth=6, use_label_encoder=False, eval_metric="logloss", random_state=42)
 }
 
-
-mlflow.set_experiment("Diabetes-Risk-Prediction-MLflow")
 client=MlflowClient()
+
+
+
+mlflow.set_experiment("Diabetes-Risk-Prediction-V5")
 best_acc=0
 best_run_id = None
 for model_name, model_obj in models.items():
@@ -79,14 +81,19 @@ for model_name, model_obj in models.items():
 
         print(f" {model_name} trained, logged and registered in MLflow")
         
-        if acc>best_acc:
-            best_acc=acc
-            best_run_id=mlflow.active_run().info.run_id
-            print(f"{model_name} trained, logged and registered in MLflow")
+        if acc > best_acc:
+            best_acc = acc
+            best_model_name = model_name
+            best_run_id = mlflow.active_run().info.run_id
 
 if best_run_id:
-    versions=client.get_latest_versions(name=model_name)
+    versions = client.get_latest_versions(name=best_model_name)
     for v in versions:
-        if v.run_id==best_run_id:
-            client.transition_model_version_stage(name=model_name,version=v.version,stage="Production",archive_existing_versions=True)
-        print(f"Model {model_name} version {v.version} promoted to Production")
+        if v.run_id == best_run_id:
+            client.transition_model_version_stage(
+                name=best_model_name,
+                version=v.version,
+                stage="Production",
+                archive_existing_versions=True
+            )
+            print(f"Model {best_model_name} version {v.version} promoted to Production")

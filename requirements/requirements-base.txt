@@ -1,4 +1,6 @@
 pandas
 scikit-learn
 mlflow
-xgboost
+numpy
+scipy
+joblib

@@ -15,3 +15,12 @@ def predict(patient: PatientData):
 @app.get("/health")
 def health():
     return {"status": "API is running"}
+from prometheus_client import Counter, Histogram, generate_latest
+from fastapi import Response
+
+REQUEST_COUNT = Counter("request_count", "Total API requests")
+REQUEST_LATENCY = Histogram("request_latency_seconds", "Request latency")
+
+@app.get("/metrics")
+def metrics():
+    return Response(generate_latest(), media_type="text/plain")
