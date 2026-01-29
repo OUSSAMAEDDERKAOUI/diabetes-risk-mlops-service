@@ -1,10 +1,67 @@
+# name: CI Pipeline
+
+# on:
+#   push:
+#     branches: [ "main" ]
+# env:
+#   MLFLOW_TRACKING_URI: ./mlruns_temp  
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
+
+#       - name: Set up Python
+#         uses: actions/setup-python@v5
+#         with:
+#           python-version: "3.11"
+
+#       - name: Install dependencies
+#         run: |
+#           pip install -r requirements.txt
+
+#       # - name: Run tests
+#       #   run: |
+#       #     pytest
+#       # - name: Validate data quality
+#       #   run: |
+#       #     python scripts/validate_data.py
+
+
+#       - name: Validate data quality
+#         run: |
+#           pip install pytest pandas
+#           pytest tests/test_data_quality.py --maxfail=1 --disable-warnings
+
+#       - name: Validate model quality
+#         run: |
+#           pip install pytest pandas
+#           pytest tests/test_model_performance.py --maxfail=1 --disable-warnings
+
+
+
+
+#       - name: Validate model performance
+#         run: |
+#           pip install -r requirements.txt
+#           python scripts/train_test_model.py
+
+#       # - name: Code Quality Checks
+#       #   run: |
+#       #     pip install flake8 black mypy
+#       #     black --check app/ scripts/
+#       #     flake8 app/ scripts/
+#       #     mypy app/ scripts/
+
+
 name: CI Pipeline
 
 on:
   push:
-    branches: [ "main" ]
-env:
-  MLFLOW_TRACKING_URI: ./mlruns_temp  
+    branches: ["main"]
 
 jobs:
   build:
@@ -22,38 +79,14 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
-
-      # - name: Run tests
-      #   run: |
-      #     pytest
-      # - name: Validate data quality
-      #   run: |
-      #     python scripts/validate_data.py
-
+          pip install pytest pandas scikit-learn mlflow
 
       - name: Validate data quality
         run: |
-          pip install pytest pandas
           pytest tests/test_data_quality.py --maxfail=1 --disable-warnings
-          
-      - name: Validate model quality
-        run: |
-          pip install pytest pandas
-          pytest tests/test_model_performance.py --maxfail=1 --disable-warnings
-
-
-
 
       - name: Validate model performance
+        env:
+          MLFLOW_TRACKING_URI: ./mlruns_temp  # CI local MLflow
         run: |
-          pip install -r requirements.txt
-          python scripts/train_test_model.py
-
-      # - name: Code Quality Checks
-      #   run: |
-      #     pip install flake8 black mypy
-      #     black --check app/ scripts/
-      #     flake8 app/ scripts/
-      #     mypy app/ scripts/
-
-
+          pytest tests/test_model_performance.py --maxfail=1 --disable-warnings
