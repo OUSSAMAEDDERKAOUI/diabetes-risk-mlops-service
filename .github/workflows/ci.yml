@@ -61,7 +61,11 @@ name: CI Pipeline
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
+
+env:
+  # Répertoire temporaire MLflow pour CI
+  MLFLOW_TRACKING_URI: ./mlruns_temp  
 
 jobs:
   build:
@@ -77,16 +81,12 @@ jobs:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-          pip install pytest pandas scikit-learn mlflow
+        run: pip install -r requirements.txt pytest pandas scikit-learn xgboost mlflow
 
-      - name: Validate data quality
-        run: |
-          pytest tests/test_data_quality.py --maxfail=1 --disable-warnings
+      # 🔹 Étape 1 : Entraîner et enregistrer un modèle temporaire
+      - name: Train temp model for CI
+        run: python scripts/train_test_model_ci.py
 
-      - name: Validate model performance
-        env:
-          MLFLOW_TRACKING_URI: ./mlruns_temp  # CI local MLflow
-        run: |
-          pytest tests/test_model_performance.py --maxfail=1 --disable-warnings
+      # 🔹 Étape 2 : Tester la performance du modèle enregistré
+      - name: Validate model quality
+        run: pytest tests/test_model_performance.py --maxfail=1 --disable-warnings

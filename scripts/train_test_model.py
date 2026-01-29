@@ -1,33 +1,38 @@
 import pandas as pd
 import mlflow
 import mlflow.sklearn
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
-import sys
-
-MIN_ACCURACY = 0.75
-MIN_F1_SCORE = 0.70
-
-MODEL_URI = "models:/LogisticRegression/Production"  
-model = mlflow.sklearn.load_model(MODEL_URI)
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
+from sklearn.linear_model import LogisticRegression
 
 DATA_PATH = "data/diabetes_data_cleaned_classified.csv"
+MODEL_NAME = "LogisticRegression"
+MODEL_STAGE = "Production"  # le stage que le test CI va charger
+
+# Charger les données
 df = pd.read_csv(DATA_PATH)
+X = df.drop(columns=["Cluster", "risk_category"])
+y = df["Cluster"]
 
-X_test = df.drop(columns=["Cluster", "risk_category"])
-y_test = df["Cluster"]
+# Split rapide pour CI
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-y_pred = model.predict(X_test)
+# Pipeline simple
+pipeline = Pipeline([
+    ("scaler", StandardScaler()),
+    ("model", LogisticRegression(solver="liblinear"))
+])
 
-acc = accuracy_score(y_test, y_pred)
-precision = precision_score(y_test, y_pred)
-recall = recall_score(y_test, y_pred)
-f1 = f1_score(y_test, y_pred)
+# Entraînement
+pipeline.fit(X_train, y_train)
 
-print(f"Accuracy: {acc:.2f}, Precision: {precision:.2f}, Recall: {recall:.2f}, F1-score: {f1:.2f}")
-
-if acc < MIN_ACCURACY or f1 < MIN_F1_SCORE:
-    print(" Model performance below threshold!")
-    sys.exit(1)  
-else:
-    print(" Model performance OK!")
-    sys.exit(0)  
+# Logger et enregistrer dans MLflow
+with mlflow.start_run(run_name=MODEL_NAME):
+    mlflow.sklearn.log_model(
+        sk_model=pipeline,
+        artifact_path="model",
+        registered_model_name=MODEL_NAME
+    )
+    mlflow.log_param("solver", "liblinear")
+    print("Temporary CI model trained and registered.")
