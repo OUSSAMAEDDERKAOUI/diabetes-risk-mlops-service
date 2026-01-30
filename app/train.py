@@ -18,7 +18,6 @@ from sklearn.base import BaseEstimator
 
 from xgboost import XGBClassifier
 
-
 DATA_PATH: str = "data/data_cleaned_standardized_clustred_classified.csv"
 TARGET: str = "Cluster"
 

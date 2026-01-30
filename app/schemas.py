@@ -22,5 +22,6 @@ class PredictionInput(BaseModel):
     skin_thickness: float
     diabetes_pedigree_function: float
 
+
 class OutputSchema(BaseModel):
     prediction: int
