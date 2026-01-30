@@ -24,11 +24,12 @@ jobs:
       - name: Build & push Docker image
         run: |
           IMAGE_TAG=$(git rev-parse --short HEAD)
-
-          docker build \
+      
+                docker build \
+            -f docker/api.Dockerfile \
             -t ${{ secrets.DOCKER_USERNAME }}/diabetes-risk-api:${IMAGE_TAG} \
             -t ${{ secrets.DOCKER_USERNAME }}/diabetes-risk-api:latest \
             .
-
-          docker push ${{ secrets.DOCKER_USERNAME }}/diabetes-risk-api:${IMAGE_TAG}
+      
+                docker push ${{ secrets.DOCKER_USERNAME }}/diabetes-risk-api:${IMAGE_TAG}
           docker push ${{ secrets.DOCKER_USERNAME }}/diabetes-risk-api:latest
