@@ -28,7 +28,6 @@
 from fastapi import FastAPI
 from app.model_loader import load_model
 from app.schemas import PredictionInput, OutputSchema
-import pandas as pd
 
 app = FastAPI(title="Diabetes Risk API")
 

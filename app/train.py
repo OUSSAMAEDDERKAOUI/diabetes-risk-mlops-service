@@ -6,7 +6,7 @@ import mlflow
 import mlflow.sklearn
 
 from mlflow.tracking import MlflowClient
-from mlflow.entities import Run
+# from mlflow.entities import Run
 
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
