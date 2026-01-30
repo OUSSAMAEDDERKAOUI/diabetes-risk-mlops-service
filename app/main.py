@@ -27,15 +27,23 @@
 # app/main.py
 from fastapi import FastAPI
 from app.model_loader import load_model
-from app.schemas import PredictionInput
+from app.schemas import PredictionInput ,OutputSchema
 import pandas as pd
 
 app = FastAPI(title="Diabetes Risk API")
 
 model = load_model()
 
-@app.post("/predict")
-def predict(data: PredictionInput):
-    df = pd.DataFrame([data.dict()])
-    pred = model.predict(df)
-    return {"prediction": int(pred[0])}
+
+# @app.post("/predict", response_model=OutputSchema)
+# def predict(data: PredictionInput)->OutputSchema:
+#     df = pd.DataFrame([data.dict()])
+#     pred = model.predict(df)
+#     return {"prediction": int(pred[0])}
+# from app.schemas import OutputSchema
+
+
+@app.post("/predict", response_model=OutputSchema)
+def predict(data: PredictionInput)->OutputSchema:
+    prediction = int(model.predict(data)[0])
+    return OutputSchema(prediction=prediction)

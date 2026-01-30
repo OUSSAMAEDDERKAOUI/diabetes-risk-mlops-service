@@ -1,4 +1,3 @@
-
 # from pydantic import BaseModel
 
 # class PatientData(BaseModel):
@@ -13,6 +12,7 @@
 # app/schemas.py
 from pydantic import BaseModel
 
+
 class PredictionInput(BaseModel):
     age: int
     bmi: float
@@ -21,3 +21,6 @@ class PredictionInput(BaseModel):
     insulin: float
     skin_thickness: float
     diabetes_pedigree_function: float
+
+class OutputSchema(BaseModel):
+    prediction: int

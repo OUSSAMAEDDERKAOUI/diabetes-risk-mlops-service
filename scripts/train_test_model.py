@@ -16,13 +16,14 @@ X = df.drop(columns=["Cluster", "risk_category"])
 y = df["Cluster"]
 
 # Split rapide pour CI
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
 
 # Pipeline simple
-pipeline = Pipeline([
-    ("scaler", StandardScaler()),
-    ("model", LogisticRegression(solver="liblinear"))
-])
+pipeline = Pipeline(
+    [("scaler", StandardScaler()), ("model", LogisticRegression(solver="liblinear"))]
+)
 
 # Entraînement
 pipeline.fit(X_train, y_train)
@@ -30,9 +31,7 @@ pipeline.fit(X_train, y_train)
 # Logger et enregistrer dans MLflow
 with mlflow.start_run(run_name=MODEL_NAME):
     mlflow.sklearn.log_model(
-        sk_model=pipeline,
-        artifact_path="model",
-        registered_model_name=MODEL_NAME
+        sk_model=pipeline, artifact_path="model", registered_model_name=MODEL_NAME
     )
     mlflow.log_param("solver", "liblinear")
     print("Temporary CI model trained and registered.")

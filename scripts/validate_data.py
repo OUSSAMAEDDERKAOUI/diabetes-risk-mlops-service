@@ -2,9 +2,14 @@ import pandas as pd
 import sys
 
 EXPECTED_COLUMNS = [
-    "Pregnancies", "Glucose", "BloodPressure",
-    "SkinThickness", "Insulin", "BMI",
-    "DiabetesPedigreeFunction", "Age"
+    "Pregnancies",
+    "Glucose",
+    "BloodPressure",
+    "SkinThickness",
+    "Insulin",
+    "BMI",
+    "DiabetesPedigreeFunction",
+    "Age",
 ]
 
 df = pd.read_csv("data/data_cleaned_standardized_clustred_classified.csv")
