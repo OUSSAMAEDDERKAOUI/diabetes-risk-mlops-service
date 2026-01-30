@@ -44,7 +44,7 @@ models: Dict[str, BaseEstimator] = {
     ),
 }
 
-mlflow.set_experiment("Diabetes-Risk-Prediction")
+mlflow.set_experiment("Diabetes-Risk-Prediction7")
 client: MlflowClient = MlflowClient()
 
 best_acc: float = 0.0
