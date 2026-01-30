@@ -1,0 +1,34 @@
+name: CD Pipeline
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build & push Docker image
+        run: |
+          IMAGE_TAG=$(git rev-parse --short HEAD)
+
+          docker build \
+            -t ${{ secrets.DOCKER_USERNAME }}/diabetes-risk-api:${IMAGE_TAG} \
+            -t ${{ secrets.DOCKER_USERNAME }}/diabetes-risk-api:latest \
+            .
+
+          docker push ${{ secrets.DOCKER_USERNAME }}/diabetes-risk-api:${IMAGE_TAG}
+          docker push ${{ secrets.DOCKER_USERNAME }}/diabetes-risk-api:latest

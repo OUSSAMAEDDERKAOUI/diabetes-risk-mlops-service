@@ -2,21 +2,15 @@ import os
 import pytest
 import pandas as pd
 
-# ------------------
-# Paths
-# ------------------
+
 DATA_PATH = "data/diabetes_data_cleaned_classified.csv"
 CANDIDATE_DIR = "models/candidate"
 
-# ------------------
-# Thresholds
-# ------------------
+
 MIN_ACC = 0.75
 MIN_F1 = 0.70
 
-# ------------------
-# Fixtures pytest
-# ------------------
+
 @pytest.fixture(scope="session")
 def dataset():
     df = pd.read_csv(DATA_PATH)

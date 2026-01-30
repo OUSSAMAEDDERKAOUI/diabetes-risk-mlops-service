@@ -113,3 +113,5 @@ if best_run_id:
                 archive_existing_versions=True
             )
             print(f"Model {best_model_name} version {v.version} promoted to Production")
+            production_path = os.path.join(PRODUCTION_DIR, f"{best_model_name}.joblib")
+            joblib.dump(pipeline, production_path)
