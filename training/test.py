@@ -2,9 +2,8 @@ from mlflow.tracking import MlflowClient
 
 client = MlflowClient()
 
-model_name = "LogisticRegression"  # exemple
+model_name = "LogisticRegression"  
 
-# Récupère toutes les versions du modèle
 versions = client.get_latest_versions(name=model_name, stages=["Production"])
 
 if versions:

@@ -2,7 +2,7 @@ import pandas as pd
 import mlflow
 import mlflow.sklearn
 from mlflow.tracking import MlflowClient
-
+import os
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
@@ -10,11 +10,21 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
-
+import joblib
 
 DATA_PATH = "data/diabetes_data_cleaned_classified.csv"  
 TARGET = "risk_category"
 MODEL_NAME = "diabetes-risk-model"
+
+MODEL_DIR = "models"
+CANDIDATE_DIR = os.path.join(MODEL_DIR, "candidate")
+PRODUCTION_DIR = os.path.join(MODEL_DIR, "production")
+ARCHIVED_DIR = os.path.join(MODEL_DIR, "archived")
+
+os.makedirs(CANDIDATE_DIR, exist_ok=True)
+os.makedirs(PRODUCTION_DIR, exist_ok=True)
+os.makedirs(ARCHIVED_DIR, exist_ok=True)
+
 
 
 df = pd.read_csv(DATA_PATH)
@@ -38,7 +48,7 @@ client=MlflowClient()
 
 
 
-mlflow.set_experiment("Diabetes-Risk-Prediction-V5")
+mlflow.set_experiment("Diabetes-Risk-Prediction-V6")
 best_acc=0
 best_run_id = None
 for model_name, model_obj in models.items():
@@ -85,6 +95,12 @@ for model_name, model_obj in models.items():
             best_acc = acc
             best_model_name = model_name
             best_run_id = mlflow.active_run().info.run_id
+
+        candidate_path = os.path.join(CANDIDATE_DIR, f"{model_name}.joblib")
+        joblib.dump(pipeline, candidate_path)
+        print(f"[INFO] {model_name} saved to {candidate_path}")
+
+
 
 if best_run_id:
     versions = client.get_latest_versions(name=best_model_name)
